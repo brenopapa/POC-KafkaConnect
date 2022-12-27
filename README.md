@@ -10,7 +10,7 @@ Para baixar e configurar a imagem em um container diretamente via terminal, exec
 
 Após executar o comando, o container com o banco de dados já estará rodando e disponível para acesso em: http://localhost:5432
 
-Para os testes de CDC, é preciso criar uma ou mais tabelas no banco de dados para simular transações. [Aqui]() está disponibilizado um script que já popula algunmas tabelas com dados de uma livraria fictícia. Também é necessário executar esse select no banco de dados para alterar o WAL LEVEL (nível de log gerado pelo Postgres), pois o Kafka Connect precisa de no mínimo um WAL LEVEL = `logical`.
+Para os testes de CDC, é preciso criar uma ou mais tabelas no banco de dados para simular transações. [Aqui](https://github.com/brenopapa/POC-KafkaConnect/blob/main/create_tables.sql) está disponibilizado um script que já popula algunmas tabelas com dados de uma livraria fictícia. Também é necessário executar esse select no banco de dados para alterar o WAL LEVEL (nível de log gerado pelo Postgres), pois o Kafka Connect precisa de no mínimo um WAL LEVEL = `logical`.
 
 `ALTER SYSTEM SET wal_level = logical;`
 
@@ -37,11 +37,12 @@ Para realizar o envio das mensagens capturadas pelo Kafka Connect para uma tabel
 ⚠ APÓS O DOWNLOAD SERÁ NECESSÁRIO REINICIAR TODOS OS SERVIÇOS DO CONFLUENT PLATFORM ⚠ 
 
 `confluent local services stop`
+
 `confluent local services start`
 
 ## Gerando mensagens de transações no banco de dados
 Acesse o Confluent em http://localhost:9021/. Navegue em Connect > connect-default > Add connector.
-Caso tenha seguido os passos para setup do banco de dados exatamente como este documento, basta utilizar [este]() arquivo clicando em `Upload connector config file` para configurar o seu connector. Ele basicamente é um JSON com as informações básicas de conexão ao banco Postgres e alguns parâmetros de conexão para o Kafka Connect. Caso tenha seu próprio banco de dados, basta alterar os parâmetros abaixo:
+Caso tenha seguido os passos para setup do banco de dados exatamente como este documento, basta utilizar [este](https://github.com/brenopapa/POC-KafkaConnect/blob/main/connector_postgres_config.json) arquivo clicando em `Upload connector config file` para configurar o seu connector. Ele basicamente é um JSON com as informações básicas de conexão ao banco Postgres e alguns parâmetros de conexão para o Kafka Connect. Caso tenha seu próprio banco de dados, basta alterar os parâmetros abaixo:
 
 | Parâmetro | Informações |
 | --- | --- |
@@ -57,7 +58,7 @@ EXEMPLO IMAGEM
 
 ## Capturando mensagens e registrando no BigQuery
 Acesse o Confluent em http://localhost:9021/. Navegue em Connect > connect-default > Add connector.
-No caso do BigQuery, precisaremos configurar manualmente o arquivo de configuração por conta da Google Service Account, projeto e dataset do Google que irão mudar de acordo com quem está fazendo os testes. [Aqui]() temos um exemplo de arquivo de configuração. Deverão ser alterados os parâmetros abaixo:
+No caso do BigQuery, precisaremos configurar manualmente o arquivo de configuração por conta da Google Service Account, projeto e dataset do Google que irão mudar de acordo com quem está fazendo os testes. [Aqui](https://github.com/brenopapa/POC-KafkaConnect/blob/main/connector_BigQuery_config.json) temos um exemplo de arquivo de configuração. Deverão ser alterados os parâmetros abaixo:
 
 | Parâmetro | Informações |
 | --- | --- |
@@ -72,7 +73,7 @@ Para gerar uma service account pela Carol, basta acessar o menu de Tenant Admin 
 
 ## Visualizando o fluxo de CDC
 1. Acesse o tópico que irá monitorar para os testes, navegue até o menu `Messages`.
-2. Insira/Altere/Delete um registro em uma das tabelas criadas.
+2. Insira/Altere/Delete um registro em uma das tabelas criadas. [Aqui](https://github.com/brenopapa/POC-KafkaConnect/blob/main/postgresadddata.py) temos um script que popula mil linhas na tabela `Sales` cada vez que é executado.
 3. Uma mensagem aparecerá na tela de visualização de mensagens do tópico (Kafka Connect capturando a transação do banco de dados).
 4. Acesse o console do Google Big Query, no projeto e dataset configurados anteriormente. Verifique a tabela com o nome do tópico, a alteração estará presente como uma nova linha.
 
