@@ -57,9 +57,11 @@ Caso tenha seguido os passos para setup do banco de dados exatamente como este d
 Aguarde alguns instantes até o connector iniciar (ele pode apresentar falha em primeiro instante). Os tópicos serão criados seguindo o nome das tabelas no banco de dados e já estarão ouvindo as tabelas caso alguma transação seja feita. Ao navegar até o menu `Topics`, selecionar um tópico e clicar em `Messages`, caso haja qualquer transação dentro da tabela, a mesma será capturada em tempo real e apresentada em tela.
 
 Exemplo de tópicos criados:
+
 ![topics](lib/topics.png)
 
 Exemplo de mensagens em um tópico:
+
 ![messages](lib/messages.png)
 
 ## Capturando mensagens e registrando no BigQuery
