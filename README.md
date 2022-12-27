@@ -40,6 +40,8 @@ Para realizar o envio das mensagens capturadas pelo Kafka Connect para uma tabel
 
 `confluent local services start`
 
+Após reiniciar o Confluent Platform, os connectores instalados devem ser exibidos em Connect > connect-default > Add connector com os nomes `PostgresConnector` e `BigQuerySinkConnector`.
+
 ## Gerando mensagens de transações no banco de dados
 Acesse o Confluent em http://localhost:9021/. Navegue em Connect > connect-default > Add connector.
 Caso tenha seguido os passos para setup do banco de dados exatamente como este documento, basta utilizar [este](connectors/connector_postgres_config.json) arquivo clicando em `Upload connector config file` para configurar o seu connector. Ele basicamente é um JSON com as informações básicas de conexão ao banco Postgres e alguns parâmetros de conexão para o Kafka Connect. Caso tenha seu próprio banco de dados, basta alterar os parâmetros abaixo:
@@ -54,7 +56,11 @@ Caso tenha seguido os passos para setup do banco de dados exatamente como este d
 
 Aguarde alguns instantes até o connector iniciar (ele pode apresentar falha em primeiro instante). Os tópicos serão criados seguindo o nome das tabelas no banco de dados e já estarão ouvindo as tabelas caso alguma transação seja feita. Ao navegar até o menu `Topics`, selecionar um tópico e clicar em `Messages`, caso haja qualquer transação dentro da tabela, a mesma será capturada em tempo real e apresentada em tela.
 
-![alt text](lib/messages.png)
+Exemplo de tópicos criados:
+![topics](lib/topics.png)
+
+Exemplo de mensagens em um tópico:
+![messages](lib/messages.png)
 
 ## Capturando mensagens e registrando no BigQuery
 Acesse o Confluent em http://localhost:9021/. Navegue em Connect > connect-default > Add connector.
@@ -67,7 +73,10 @@ No caso do BigQuery, precisaremos configurar manualmente o arquivo de configura�
 | defaultDataset | Dataset selecionado para receber os dados. |
 | keyfile | Localização da Google Service Account. |
 
-Aguarde alguns instantes até o connector iniciar (ele pode apresentar falha em primeiro instante). As tabelas no Big Query serão criadas seguindo o nome dos tópicos inseridos no arquivo de configuração.
+Aguarde alguns instantes até o connector iniciar (ele pode apresentar falha em primeiro instante). As tabelas no Big Query serão criadas seguindo o nome dos tópicos inseridos no arquivo de configuração. As mensagens passadas serão automáticamente enviadas para a tabela do BQ, além de que qualquer nova mensagem será enviada, assim registrando as mudanças na tabela.
+
+![bigquery](lib/bigquery.png)
+
 ### Service Account via Carol
 Para gerar uma service account pela Carol, basta acessar o menu de Tenant Admin > Tokens > Google Service Account. Com o arquivo baixado, utilize a localização do mesmo dentro de sua máquina (caso esteja seguindo este passo-a-passo) ou insira o mesmo no volume do Docker para que o container consiga visualizar o arquivo.
 
