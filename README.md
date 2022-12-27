@@ -34,7 +34,7 @@ Para capturar as mensagens de transações de um banco de dados Postgresql utili
 ### Plugin BigQuery
 Para realizar o envio das mensagens capturadas pelo Kafka Connect para uma tabela no Google Big Query, é necessário baixar o plugin [Google BigQuery Sink Connector](https://www.confluent.io/hub/wepay/kafka-connect-bigquery). Baixe o pacote zip e insira o conteúdo na pasta `share/confluent-hub-components` do seu Confluent Platform instalado anteriormente. Sugiro essa pasta pois para capturar plugins o Confluent Platform utiliza um parâmetro `plugin.path` dentro de um arquivo localizado em `etc/schema-registry` e na configuração padrão do Confluent Platform essa é a pasta de plugins padrão.
 
-⚠ APÓS O DOWNLOAD DOS PLUGINS SERÁ NECESSÁRIO REINICIAR TODOS OS SERVIÇOS DO CONFLUENT PLATFORM ⚠ 
+⚠ APÓS O DOWNLOAD SERÁ NECESSÁRIO REINICIAR TODOS OS SERVIÇOS DO CONFLUENT PLATFORM ⚠ 
 
 `confluent local services stop`
 `confluent local services start`
