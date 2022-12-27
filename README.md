@@ -60,7 +60,7 @@ Exemplo de tópicos criados:
 
 ![topics](lib/topics.png)
 
-Exemplo de mensagens em um tópico:
+Exemplo de mensagens em um tópico (aparecerão apenas mediante a movimentação nas tabelas):
 
 ![messages](lib/messages.png)
 
