@@ -121,3 +121,5 @@ Os conectores irão aparecer no menu Connect > connect-default > Add connector.
 Agora com os conectores instalados, basta utilizar os arquivos de configuração da pasta `connectors` para configurar os conectores e seguir com a configuração do CDC. 
 
 Sugiro voltar aos tópicos anteriores caso seja necessário um passo a passo mais detalhado. 
+
+OBS: A configuração utilizando apenas Docker (banco de dados + Confluent Platform) exige algumas configurações de networking para que os containers possam se comunicar, além de que o banco de dados deverá estar habilitado para aceitar conexões TCP/IP externas. 
