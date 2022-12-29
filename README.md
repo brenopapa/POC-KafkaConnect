@@ -105,8 +105,9 @@ Os containers serão inicializados e irão subir o serviço nas portas padrões 
 
 Com os containers rodando, precisaremos adicionar os plugins baixados nos passos `Plugin Debezium Postgresql` e `Plugin BigQuery`. Baixe ambos os .zip e execute os seguintes comandos:
 
-docker cp wepay-kafka-connect-bigquery-2.4.2 **ID_DO_CONTAINER**:/usr/share/java
-docker cp debezium-debezium-connector-postgresql-2.0.1 **ID_DO_CONTAINER**:/usr/share/java
+`docker cp wepay-kafka-connect-bigquery-2.4.2 **ID_DO_CONTAINER**:/usr/share/java``
+
+`docker cp debezium-debezium-connector-postgresql-2.0.1 **ID_DO_CONTAINER**:/usr/share/java`
 
 Substitua **ID_DO_CONTAINER** pelo id do container de nome `connect` que foi criado ao executar o docker-compose.yml.
 
