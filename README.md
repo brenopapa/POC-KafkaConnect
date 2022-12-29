@@ -22,7 +22,7 @@ Com o banco de dados rodando e com dados inseridos, seguimos para a configuraç�
 
 ## Setup Kafka Connect - Confluent Platform
 O passo-a-passo abaixo está seguindo os passos desse [link](https://docs.confluent.io/platform/current/platform-quickstart.html#step-1-download-and-start-cp
-), utilizando o "Tar Archive˜. Para utilizar o arquivo .tar, é preciso que sua máquina tenha certos [pré-requisitos](https://docs.confluent.io/platform/current/platform-quickstart.html#prerequisites). É possível também utilizar a imagem Docker disponibilizada.
+), utilizando o "Tar Archive˜. Para utilizar o arquivo .tar, é preciso que sua máquina tenha certos [pré-requisitos](https://docs.confluent.io/platform/current/platform-quickstart.html#prerequisites). **É possível também utilizar a imagem Docker disponibilizada, ao final desse README, há um tópico específico para a instalação dos containers utilizando Docker.**
 
 Execute os comandos conforme o passo-a-passo do link acima e será criado um serviço presente em http://localhost:9021/ onde teremos o Confluent Platform rodando.
 
@@ -43,6 +43,8 @@ Caso esteja utilizando Docker, será necessário inserir os arquivos no volume d
 `confluent local services start`
 
 Após reiniciar o Confluent Platform, os connectores instalados devem ser exibidos em Connect > connect-default > Add connector com os nomes `PostgresConnector` e `BigQuerySinkConnector`.
+
+**A partir daqui, a configuração utilizando Docker ou o arquivo .tar são iguais, pois utilizam o confluent platform diretamente**
 
 ## Gerando mensagens de transações no banco de dados
 Acesse o Confluent em http://localhost:9021/. Navegue em Connect > connect-default > Add connector.
@@ -90,3 +92,30 @@ Para gerar uma service account pela Carol, basta acessar o menu de Tenant Admin 
 3. Uma mensagem aparecerá na tela de visualização de mensagens do tópico (Kafka Connect capturando a transação do banco de dados).
 4. Acesse o console do Google Big Query, no projeto e dataset configurados anteriormente. Verifique a tabela com o nome do tópico, a alteração estará presente como uma nova linha.
 
+## Utilizando Docker
+Para criar a mesma estrutura utilizando Docker, basta utilizar o arquivo [docker-compose.yml](./docker-compose.yml) presente neste repositório, ele é disponibilizado pelo próprio Confluent na página de [Quick Start](https://docs.confluent.io/platform/current/platform-quickstart.html#step-1-download-and-start-cp) e pode ser baixado usando o comando abaixo:
+
+`curl --silent --output docker-compose.yml https://raw.githubusercontent.com/confluentinc/cp-all-in-one/7.3.1-post/cp-all-in-one/docker-compose.yml`
+
+Após baixar o arquivo, basta executar o Docker Compose:
+
+`docker-compose up -d`
+
+Os containers serão inicializados e irão subir o serviço nas portas padrões conforme anteriormente, ou seja, o serviço será acessado novamente por http://localhost:9021/ onde teremos o Confluent Platform rodando. É importante ressaltar que para subir os containers, deve-se parar todos os serviços locais do confluent (caso tenha instalado localmente sem usar docker), digitando o comando `confluent local services stop` no terminal.
+
+Com os containers rodando, precisaremos adicionar os plugins baixados nos passos `Plugin Debezium Postgresql` e `Plugin BigQuery`. Baixe ambos os .zip e execute os seguintes comandos:
+
+docker cp wepay-kafka-connect-bigquery-2.4.2 **ID_DO_CONTAINER**:/usr/share/java
+docker cp debezium-debezium-connector-postgresql-2.0.1 **ID_DO_CONTAINER**:/usr/share/java
+
+Substitua **ID_DO_CONTAINER** pelo id do container de nome `connect` que foi criado ao executar o docker-compose.yml.
+
+![messages](lib/connect.png)
+
+Reinicie o container (pode ser apenas o `connect` ou todos os containers).
+
+Os conectores irão aparecer no menu Connect > connect-default > Add connector.
+
+Agora com os conectores instalados, basta utilizar os arquivos de configuração da pasta `connectors` para configurar os conectores e seguir com a configuração do CDC. 
+
+Sugiro voltar aos tópicos anteriores caso seja necessário um passo a passo mais detalhado. 
