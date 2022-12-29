@@ -92,6 +92,8 @@ Para gerar uma service account pela Carol, basta acessar o menu de Tenant Admin 
 3. Uma mensagem aparecerá na tela de visualização de mensagens do tópico (Kafka Connect capturando a transação do banco de dados).
 4. Acesse o console do Google Big Query, no projeto e dataset configurados anteriormente. Verifique a tabela com o nome do tópico, a alteração estará presente como uma nova linha.
 
+O arquivo [postgres_public_Users.xlsx](./postgres_public_Users.xlsx) tem os dados gerados no BigQuery pelo CDC configurado. Além disso, a tabela do BigQuery pode ser acessada diretamente na tenant e tabela `bca1007e136a4632a83dabd97879684c.postgres_public_Users`.
+
 ## Utilizando Docker
 Para criar a mesma estrutura utilizando Docker, basta utilizar o arquivo [docker-compose.yml](./docker-compose.yml) presente neste repositório, ele é disponibilizado pelo próprio Confluent na página de [Quick Start](https://docs.confluent.io/platform/current/platform-quickstart.html#step-1-download-and-start-cp) e pode ser baixado usando o comando abaixo:
 
