@@ -132,11 +132,13 @@ Para realizar a inserção de registros pelo intake da Carol (e não diretamente
 Foram testados dois Sink Connectors:
 
 [Confluent HTTP Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-http)
+
 [Asaintsever Kafka Connect HTTP Sink Connector](https://asaintsever.github.io/kafka-connect-http-sink/)
 
 O arquivo de configuração de cada um está em:
 
 [Confluent HTTP Sink Connector - config file](./connectors/connector_HttpSink_confluent_config.json)
+
 [Asaintsever Kafka Connect HTTP Sink Connector - config file](./connectors/connector_HttpSink_asaintsever_config.json)
 
 Os arquivos contém configurações básicas de cada connector, afim de enviar uma mensagem com schema específico para o intake da Carol. Para utilizá-los, deve-se gerar um access_token via `https://api.carol.ai/api/v1/oauth2/token` e verificar se a URL está correta (org, tenant, staging, connector da Carol).
