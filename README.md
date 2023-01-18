@@ -42,7 +42,7 @@ Caso esteja utilizando Docker, será necessário inserir os arquivos no volume d
 
 `confluent local services start`
 
-Após reiniciar o Confluent Platform, os connectores instalados devem ser exibidos em Connect > connect-default > Add connector com os nomes `PostgresConnector` e `BigQuerySinkConnector`.
+Após reiniciar o Confluent Platform, os connectors instalados devem ser exibidos em Connect > connect-default > Add connector com os nomes `PostgresConnector` e `BigQuerySinkConnector`.
 
 **A partir daqui, a configuração utilizando Docker ou o arquivo .tar são iguais, pois utilizam o confluent platform diretamente**
 
@@ -118,10 +118,45 @@ Substitua **ID_DO_CONTAINER** pelo id do container de nome `connect` que foi cri
 
 Reinicie o container (pode ser apenas o `connect` ou todos os containers).
 
-Os conectores irão aparecer no menu Connect > connect-default > Add connector.
+Os connectors irão aparecer no menu Connect > connect-default > Add connector.
 
-Agora com os conectores instalados, basta utilizar os arquivos de configuração da pasta `connectors` para configurar os conectores e seguir com a configuração do CDC. 
+Agora com os connectors instalados, basta utilizar os arquivos de configuração da pasta `connectors` para configurar os connectors e seguir com a configuração do CDC. 
 
 Sugiro voltar aos tópicos anteriores caso seja necessário um passo a passo mais detalhado. 
 
 OBS: A configuração utilizando apenas Docker (banco de dados + Confluent Platform) exige algumas configurações de networking para que os containers possam se comunicar, além de que o banco de dados deverá estar habilitado para aceitar conexões TCP/IP externas. 
+
+## HTTP Sink Connector
+Para realizar a inserção de registros pelo intake da Carol (e não diretamente por uma tabela no BigQuery por exemplo) precisaremos utilizar um HTTP Sink Connector. Esse tipo de connector irá ouvir um tópico dentro do Kafka Connect e assim que mensagens forem sendo geradas, o mesmo irá enviar uma request HTTP/HTTPS para a URL especificada em seu arquivo de configuração.
+
+Foram testados dois Sink Connectors:
+
+[Confluent HTTP Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-http)
+[Asaintsever Kafka Connect HTTP Sink Connector](https://asaintsever.github.io/kafka-connect-http-sink/)
+
+O arquivo de configuração de cada um está em:
+
+[Confluent HTTP Sink Connector - config file](./connectors/connector_HttpSink_confluent_config.json)
+[Asaintsever Kafka Connect HTTP Sink Connector - config file](./connectors/connector_HttpSink_asaintsever_config.json)
+
+Os arquivos contém configurações básicas de cada connector, afim de enviar uma mensagem com schema específico para o intake da Carol. Para utilizá-los, deve-se gerar um access_token via `https://api.carol.ai/api/v1/oauth2/token` e verificar se a URL está correta (org, tenant, staging, connector da Carol).
+
+Os connectores se comportam de maneiras semelhantes, porém o [Asaintsever Kafka Connect HTTP Sink Connector](https://asaintsever.github.io/kafka-connect-http-sink/) teve um comportamento mais direto e com menos percalços do que o [Confluent HTTP Sink Connector](https://www.confluent.io/hub/confluentinc/kafka-connect-http). Já o [Confluent HTTP Sink Connector - config file](./connectors/connector_HttpSink_config.json) possui mais opções de modos de autenticação, apesar de ter apresentado diversos erros de timeout e rebalancing do cluster durante os testes (entendo que esses erros podem ser diminuidos com ajustes mais finos na configuração).
+
+Para validar o funcionamento do sink connector isoladamente, foi criado um tópico chamado `ingestion_newstaging`. Esse tópico irá receber a mensagem abaixo, que irá popular uma staging na Carol com dois campos, `stagingid` e `stagingstring`.
+
+{
+  "stagingid": 1,
+  "stagingstring": "abcrd"
+}
+
+Veja que a mensagem é exatamente o Json recebido pelo intake da Carol para uma staging com esses dois campos. É importante que o corpo da mensagem tenha o formato aceito pela Carol, caso não esteja em um formato suportado, os registros serão rejeitados e não inseridos na staging.
+
+Para produzir essa mensagem manualmente, basta ir até o tópico e clicar em `Produce a new message to this topic`. Cole o Json acima e envie a mensagem. Após alguns segundos o registro deve aparecer na staging da Carol.
+
+Ambos os connectors foram capazes de enviar a mensagem para a staging, mostrando que se a mensagem enviada na request estiver no formato correto, será aceita pela Carol e processada.
+
+![staging](lib/staging.png)
+
+Uma observação importante é que caso seja o intuito utilizar as mensagens vindas de outro connector (exemplo Postgres), é necessário configurar a formatação da mensagem, pois ao chegar na Carol sem a formatação correta, os registros são rejeitados por serem considerados dados inválidos. O objeto de teste foi validar se os Sink Connectors do Kafka podem enviar dados para a Carol.
+

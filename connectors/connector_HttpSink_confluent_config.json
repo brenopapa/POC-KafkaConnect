@@ -1,0 +1,22 @@
+{
+  "name": "HttpSinkConnectorConnector_CONFLUENT",
+  "config": {
+    "connector.class": "io.confluent.connect.http.HttpSinkConnector",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "topics": "another_ingestion",
+    "http.api.url": "https://datascience.carol.ai/api/v3/staging/intake/newstaging?connectorId=d5b0068fc0c0487eb52fc2a7b5e626ba",
+    "request.method": "post",
+    "headers": "Authorization: Bearer 260666596c8e483ba5553be0feac33a9",
+    "request.body.format": "json",
+    "reporter.result.topic.name": "confluent-success",
+    "reporter.result.topic.replication.factor": "1",
+    "reporter.error.topic.name": "confluent-error",
+    "reporter.error.topic.replication.factor": "1",
+    "reporter.bootstrap.servers": "http://localhost:9092",
+    "max.poll.records": "1",
+    "value.converter.schema.registry.url": "http://localhost:8081",
+    "value.converter.schemas.enable": "false",
+    "key.converter.schema.registry.url": "http://localhost:8081"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "HttpSinkConnector",
+  "config": {
+    "connector.class": "asaintsever.httpsinkconnector.HttpSinkConnector",
+    "key.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "value.converter": "org.apache.kafka.connect.storage.StringConverter",
+    "topics": "ingestion_newstaging",
+    "event.batch.maxsize": "1",
+    "http.endpoint": "https://datascience.carol.ai/api/v3/staging/intake/newstaging?connectorId=d5b0068fc0c0487eb52fc2a7b5e626ba",
+    "http.request.authentication.provider.class": "asaintsever.httpsinkconnector.http.authentication.ConfigAuthenticationProvider",
+    "http.request.authentication.provider.param.header.value": "Bearer 260666596c8e483ba5553be0feac33a9",
+    "http.request.authentication.provider.param.header.name": "Authorization",
+    "value.converter.schema.registry.url": "http://localhost:8081",
+    "value.converter.schemas.enable": "false",
+    "key.converter.schema.registry.url": "http://localhost:8081",
+    "errors.deadletterqueue.topic.name": "HttpSinkConnector_errors",
+    "errors.deadletterqueue.topic.replication.factor": "1",
+    "errors.deadletterqueue.context.headers.enable": "true"
+  }
+}
