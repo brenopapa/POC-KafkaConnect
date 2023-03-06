@@ -162,3 +162,6 @@ Ambos os connectors foram capazes de enviar a mensagem para a staging, mostrando
 
 Uma observação importante é que caso seja o intuito utilizar as mensagens vindas de outro connector (exemplo Postgres), é necessário configurar a formatação da mensagem, pois ao chegar na Carol sem a formatação correta, os registros são rejeitados por serem considerados dados inválidos. O objeto de teste foi validar se os Sink Connectors do Kafka podem enviar dados para a Carol.
 
+Comando para verificar os logs do cluster localmente:
+confluent local services connect log
+
